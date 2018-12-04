@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Generador Copa CEEB</title>
+</head>
+<body>
+<select name="esport" id="esport" onChange="canviesport()" class="styled-select1">
+   <option value="0" selected disabled>Esport</option>	
+   <option value="b">Basquet</option> 
+   <option value="f">Futbol 5</option>  
+   <option value="v">Voleibol</option> 
+</select>
+
+<select name="sexe" id="sexe" disabled onChange="canvisexe()" class="styled-select1">
+   <option value="0" selected disabled>Genere</option>	
+   <option value="m">Mixt</option> 
+   <option value="f">Femení</option>  
+</select>
+
+<select name="categoria" id="categoria" disabled onChange="canvicategoria()" class="styled-select">
+   <option value="0" selected disabled>Categoria</option>	
+   <option id="benjami" value="b">Benjamí</option>   
+   <option id="alevi" value="a">Aleví</option> 
+   <option id="infantil" value="i">Infantil</option> 
+   <option id="cadet" value="c">Cadet</option> 
+   <option id="juvenil" value="j">Juvenil</option>  
+</select>
+
+
+<button onclick="getName()">click</button>
+
+<style>
+      .tournament:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+.tournament__match__team {
+  font: 14px/1.21 Arial, sans-serif;
+  text-transform: uppercase;
+}
+.tournament__match__team a {
+  color: inherit;
+}
+
+.tournament__match__team {
+  transition: color .3s ease;
+  color: #ffffff;
+}
+.tournament__match__team:focus, .tournament__match__team:hover {
+  color: #fff;
+}
+
+.tournament__match__team {
+  box-sizing: border-box;
+  border: 1px solid #ffffff;
+  border-radius: 3px;
+}
+
+.tournament__match__team__icon, .tournament__match__status__container, .tournament__match__team__icon__green, .tournament__match__team__icon__blink  {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+
+.ellipsis, .tournament__match__team__title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+body {
+  background: #2b2b2b;
+  color: #fff;
+}
+p{
+	position: fixed;
+	margin: auto;
+}
+a {
+  color: #ccc;
+}
+
+.tournament {
+  position: relative;
+  min-height: 300px;
+  padding: 15px 0 0;
+  max-width: 95%;
+  margin: 0 auto;
+}
+
+.tournament--double-elimination {
+  padding-left: 35px;
+  padding-right: 35px;
+}
+
+.tournament__grid {
+  display: flex;
+  align-items: stretch;
+}
+
+.tournament__round {
+  position: relative;
+  flex: 1 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.tournament__round--final {
+  margin: auto;
+}
+
+.tournament__match {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  align-items: center;
+  min-height: 160px;
+}
+.tournament__match:after {
+  content: '';
+  position: absolute;
+  right: 0;
+  width: 2px;
+  background: #ffffff;
+  top: 25%;
+  bottom: 25%;
+}
+.tournament__round--right-bracket .tournament__match:after {
+  right: auto;
+  left: 0;
+}
+.tournament__round--final .tournament__match:after, .tournament__round--winner .tournament__match:after, .tournament__round--end-point .tournament__match:after {
+  display: none;
+}
+
+.tournament__match__team {
+  text-decoration: none;
+  text-align: center;
+  display: block;
+  position: relative;
+  z-index: 10;
+  width: 190px;
+  height: 24px;
+  line-height: 22px;
+  padding: 0 9px;
+  margin: auto;
+}
+.tournament__match__team:before, .tournament__match__team:after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 999px;
+  height: 1px;
+  background: #ffffff;
+}
+.tournament__match__team:after {
+  left: 100%;
+}
+.tournament__round:last-child .tournament__match__team:after, .tournament__round--end-point .tournament__match__team:after {
+  display: none;
+}
+.tournament__match__team:before {
+  right: 100%;
+}
+.tournament__round:first-child .tournament__match__team:before {
+  display: none;
+}
+.tournament__match__status:focus ~ .tournament__match__team, .tournament__match__status:hover ~ .tournament__match__team {
+  color: #fff;
+}
+
+.tournament__match__team__title {
+  display: block;
+}
+
+.tournament__match__team__icon {
+  left: 0;
+  background: #f00;
+  width: 11px;
+  height: 8px;
+}
+
+.tournament__match__team__icon__green {
+  left: 0;
+  background: green;
+  width: 11px;
+  height: 8px;
+}
+
+.tournament__match__team__icon__blink {
+  left: 0;
+  width: 11px;
+  height: 8px;
+  -webkit-animation: argh-my-eyes 0.5s infinite;
+  -moz-animation:    argh-my-eyes 0.5s infinite;
+  animation:         argh-my-eyes 0.2s infinite;
+}
+
+
+
+.tournament__match__status {
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  bottom: 25%;
+  width: 76px;
+  margin: 0 0 0 -38px;
+}
+
+@-webkit-keyframes argh-my-eyes {
+    0%   { background-color: #fff; }
+    49% { background-color: #fff; }
+    50% { background-color: #000; }
+    99% { background-color: #000; }
+    100% { background-color: #fff; }
+  }
+  @-moz-keyframes argh-my-eyes {
+    0%   { background-color: #fff; }
+    49% { background-color: #fff; }
+    50% { background-color: #000; }
+    99% { background-color: #000; }
+    100% { background-color: #fff; }
+  }
+  @keyframes argh-my-eyes {
+    0%   { background-color: #fff; }
+    49% { background-color: #fff; }
+    50% { background-color: #000; }
+    99% { background-color: #000; }
+    100% { background-color: #fff; }
+  }
+
+
+    </style>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+  
+  
+  <script>
+  if (document.location.search.match(/type=embed/gi)) {
+    window.parent.postMessage("resize", "*");
+  }
+</script>
+
+
+</head>
+
+<body translate="no" >
+<br><br><br><br><br>
+  <div class="tournament tournament--double-elimination" hidden id="divtour">
+  <!-- tournament logo -->
+  
+  <div class="tournament__grid">
+    <!-- tournament__round 1/4 -->
+    <div class="tournament__round tournament__round--first-round">
+      <div class="tournament__match">
+        <a href="#" class="tournament__match__status">
+         
+        </a>
+        <a class="tournament__match__team" href="#">
+          <i id="l0" class="tournament__match__team__icon"></i>
+          <span class="tournament__match__team__title"><p id="p0"><b></b></p></span>
+        </a>
+        <a class="tournament__match__team" href="#">
+          <i id="l1" class="tournament__match__team__icon"></i>
+          <span class="tournament__match__team__title"><p id="p1"><b></b></p></span>
+        </a>
+      </div>
+      <div class="tournament__match">
+        <a class="tournament__match__team" href="#">
+          <i id="l2" class="tournament__match__team__icon"></i>
+          <span class="tournament__match__team__title"><p id="p2"><b></b></p></span>
+        </a>
+        <a class="tournament__match__team" href="#">
+          <i id="l3" class="tournament__match__team__icon"></i>
+          <span class="tournament__match__team__title"><p id="p3"><b></b></p></span>
+        </a>
+      </div>
+      <div class="tournament__match">
+        <a class="tournament__match__team" href="#">
+          <i id="l4" class="tournament__match__team__icon"></i>
+          <span class="tournament__match__team__title"><p id="p4"><b></b></p></span>
+        </a>
+        <a class="tournament__match__team" href="#">
+          <i id="l5" class="tournament__match__team__icon"></i>
+          <span class="tournament__match__team__title"><p id="p5"><b></b></p></span>
+        </a>
+      </div>
+      <div class="tournament__match">
+        <a class="tournament__match__team" href="#">
+          <i id="l6" class="tournament__match__team__icon"></i>
+          <span class="tournament__match__team__title"><p id="p6"><b></b></p></span>
+        </a>
+        <a class="tournament__match__team" href="#">
+          <i id="l7" class="tournament__match__team__icon"></i>
+          <span class="tournament__match__team__title"><p id="p7"><b></b></p></span>
+        </a>
+      </div>
+    </div>
+
+    <!-- tournament__round 1/2 -->
+    <div class="tournament__round">
+      <div class="tournament__match">
+        <a class="tournament__match__team" href="#">
+          <i id="l16" class="tournament__match__team__icon"></i>
+          <span class="tournament__match__team__title"><p id="p16"><b></b></p></span>
+        </a>
+        <a class="tournament__match__team" href="#">
+          <i id="l17" class="tournament__match__team__icon"></i>
+          <span class="tournament__match__team__title"><p id="p17"><b></b></p></span>
+        </a>
+      </div>
+      <div class="tournament__match">
+        
+        <a class="tournament__match__team" href="#">
+          <i id="l18" class="tournament__match__team__icon"></i>
+          <span class="tournament__match__team__title"><p id="p18"><b></b></p></span>
+        </a>
+        <a class="tournament__match__team" href="#">
+          <i id="l19" class="tournament__match__team__icon"></i>
+          <span class="tournament__match__team__title"><p id="p19"><b></b></p></span>
+        </a>
+      </div>
+    </div>
+
+    <!-- tournament__round bracket final -->
+    <div class="tournament__round">
+      <div class="tournament__match">
+        <a class="tournament__match__team" href="#">
+          <i id="l24" class="tournament__match__team__icon"></i>
+          <span class="tournament__match__team__title"><p id="p24"><b></b></p></span>
+        </a>
+        <a class="tournament__match__team" href="#">
+          <i id="l25" class="tournament__match__team__icon"></i>
+          <span class="tournament__match__team__title"><p id="p25" value="2"><b></b></p></span>
+        </a>
+      </div>
+    </div>
+
+    <!-- tournament__round final -->
+    <div class="tournament__round tournament__round--final">
+      <div class="tournament__match">
+        <a class="tournament__match__team" href="#">
+          <i id="l28" class="tournament__match__team__icon"></i>
+          <span class="tournament__match__team__title"><p id="p28"><b></b></p></span>
+        </a>
+        <a class="tournament__match__team" href="#">
+          <i id="l29" class="tournament__match__team__icon"></i>
+          <span class="tournament__match__team__title"><p id="p29"><b></b></p></span>
+        </a>
+      </div>
+    </div>
+
+    <!-- tournament__round bracket final -->
+    <div class="tournament__round tournament__round--right-bracket">
+      <div class="tournament__match">
+        <a class="tournament__match__team" href="#">
+          <i id="l26" class="tournament__match__team__icon"></i>
+          <span class="tournament__match__team__title"><p id="p26"><b></b></p></span>
+        </a>
+        <a class="tournament__match__team" href="#">
+          <i id="l27" class="tournament__match__team__icon"></i>
+          <span class="tournament__match__team__title"><p id="p27"><b></b></p></span>
+        </a>
+      </div>
+    </div>
+
+    <!-- tournament__round 1/2 -->
+    <div class="tournament__round tournament__round--right-bracket">
+      <div class="tournament__match">
+        <a class="tournament__match__team" href="#">
+          <i id="l20" class="tournament__match__team__icon"></i>
+          <span class="tournament__match__team__title"><p id="p20"><b></b></p></span>
+        </a>
+        <a class="tournament__match__team" href="#">
+          <i id="l21" class="tournament__match__team__icon"></i>
+          <span class="tournament__match__team__title"><p id="p21"><b></b></p></span>
+        </a>
+      </div>
+      <div class="tournament__match">
+        <a class="tournament__match__team" href="#">
+          <i id="l22" class="tournament__match__team__icon"></i>
+          <span class="tournament__match__team__title"><p id="p22"><b></b></p></span>
+        </a>
+        <a class="tournament__match__team" href="#">
+          <i id="l23" class="tournament__match__team__icon"></i>
+          <span class="tournament__match__team__title"><p id="p23"><b></b></p></span>
+        </a>
+      </div>
+    </div>
+
+    <!-- tournament__round 1/4 -->
+    <div class="tournament__round tournament__round--right-bracket">
+      <div class="tournament__match">
+        <a class="tournament__match__team" href="#">
+          <i id="l8" class="tournament__match__team__icon"></i>
+          <span class="tournament__match__team__title"><p id="p8"><b></b></p></span>
+        </a>
+        <a class="tournament__match__team" href="#">
+          <i id="l9" class="tournament__match__team__icon"></i>
+          <span class="tournament__match__team__title"><p id="p9"><b></b></p></span>
+        </a>
+      </div>
+      <div class="tournament__match">
+        <a class="tournament__match__team" href="#">
+          <i id="l10" class="tournament__match__team__icon"></i>
+          <span class="tournament__match__team__title"><p id="p10"><b></b></p></span>
+        </a>
+        <a class="tournament__match__team" href="#">
+          <i id="l11" class="tournament__match__team__icon"></i>
+          <span class="tournament__match__team__title"><p id="p11"><b></b></p></span>
+        </a>
+      </div>
+      <div class="tournament__match">
+        <a class="tournament__match__team" href="#">
+          <i id="l12" class="tournament__match__team__icon"></i>
+          <span class="tournament__match__team__title"><p id="p12"><b></b></p></span>
+        </a>
+        <a class="tournament__match__team" href="#">
+          <i id="l13" class="tournament__match__team__icon"></i>
+          <span class="tournament__match__team__title"><p id="p13"><b></b></p></span>
+        </a>
+      </div>
+      <div class="tournament__match">
+        <a class="tournament__match__team" href="#">
+          <i id="l14" class="tournament__match__team__icon"></i>
+          <span class="tournament__match__team__title"><p id="p14"><b></b></p></span>
+        </a>
+        <a class="tournament__match__team" href="#">
+          <i id="l15" class="tournament__match__team__icon"></i>
+          <span class="tournament__match__team__title"><p id="p15"><b></b></p></span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+
+<script src="javascript.js"></script>
+</body>
+</html>
